@@ -70,8 +70,9 @@ namespace ERCTest
             }
 
             HomeController.SetCounters(countersList);
-
             HomeController.SaveChangesInDB();
+
+            Console.Clear();
         }
 
         private static void CheckResidentsCount()
@@ -129,6 +130,8 @@ namespace ERCTest
 
         private static void ChangePeople()
         {
+            Console.Clear();
+
             Console.WriteLine("ВВедите новое количество человек");
             HomeController.SetResidentCount(int.Parse(Console.ReadLine()));
             Console.Clear();
@@ -137,6 +140,8 @@ namespace ERCTest
 
         private static void SetMesurments() 
         {
+            Console.Clear();
+
             var counterListInHome = HomeController.CurrentHome.GetCounters();
 
             foreach (var counterInHome in counterListInHome)
@@ -156,9 +161,6 @@ namespace ERCTest
                 }
                 else
                 {
-
-
-
                     HomeController.SetMesurments(counterInHome,
                         new Measurment() { AmountOfConsumption = -1, CheckTime = DateTime.Now,
                             countOfResident = HomeController.CurrentHome.ResidientsCount });
@@ -167,14 +169,18 @@ namespace ERCTest
                         + HomeController.CurrentHome.ResidientsCount + " количество человек.");
                     Console.ReadLine();
                 }
+
+                Console.Clear();
             }
 
-            Console.ReadLine();
+            Console.Clear();
             SelectAction();
         }
 
         private static void EditCounters()
         {
+            Console.Clear();
+
             var listCountersInHome = HomeController.CurrentHome.GetCounters();
             using (var db = new ERContext())
             {
@@ -228,6 +234,8 @@ namespace ERCTest
 
         private static void GetMesurments()
         {
+            Console.Clear();
+
             Console.WriteLine("Ваши начисления:");
             var allMeasurmentsDic = HomeController.GetAllMeasurmentsDic();
             var totalSum = 0d;
@@ -254,6 +262,7 @@ namespace ERCTest
             Console.WriteLine("                 Итоговая сумма за все месяцы:" + totalSum);
 
             Console.ReadLine();
+            Console.Clear();
             SelectAction();
         }
     }
