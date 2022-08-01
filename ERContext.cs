@@ -12,6 +12,7 @@ namespace ERCTest
         public DbSet<EECounterDay> EECountersDay { get; set; }
         public DbSet<EECounterNight> EECountersNight { get; set; }
         public DbSet<GVSCounter> GVSCounters { get; set; }
+        public DbSet<GVSCounter> GVSTECounters { get; set; }
         public DbSet<HVSCounter> HVSCounters { get; set; }
         public DbSet<Measurment> Measurments { get; set; }
         public DbSet<Tariff> Tariffs { get; set; }
@@ -32,6 +33,7 @@ namespace ERCTest
             modelBuilder.Entity<EECounterDay>().ToTable("EECountersDay");
             modelBuilder.Entity<EECounterNight>().ToTable("EECountersNight");
             modelBuilder.Entity<GVSCounter>().ToTable("GVSCounters");
+            modelBuilder.Entity<GVSTECounter>().ToTable("GVSTECounters");
             modelBuilder.Entity<HVSCounter>().ToTable("HVSCounters");
             modelBuilder.Entity<Measurment>().ToTable("Measurments");
             modelBuilder.Entity<Tariff>().ToTable("Tariffs");

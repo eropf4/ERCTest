@@ -144,17 +144,17 @@ namespace ERCTest.Library
             }
         }
 
-        public Dictionary<ICounter, Dictionary<Measurment, double>> GetAllMeasurmentsDic()
+        public Dictionary<ICounter, Dictionary<Measurment, decimal>> GetAllMeasurmentsDic()
         {
-            var allMeasurmentsDic = new Dictionary<ICounter, Dictionary<Measurment, double>>();
+            var allMeasurmentsDic = new Dictionary<ICounter, Dictionary<Measurment, decimal>>();
 
             var counterList = CurrentHome.GetCounters();
 
-            var lastSum = 0d;
+            var lastSum = 0m;
 
             foreach (var counter in counterList)
             {
-                allMeasurmentsDic[counter] = new Dictionary<Measurment, double>();
+                allMeasurmentsDic[counter] = new Dictionary<Measurment, decimal>();
 
                 foreach (var measurment in counter.Measurments)
                 {
@@ -171,10 +171,10 @@ namespace ERCTest.Library
                         lastSum = 0;
                         
                         if (counter is EECounterDay || counter is EECounterNight)
-                            tariff.TariffPrice = 4.28;
+                            tariff.TariffPrice = 4.28m;
 
                         allMeasurmentsDic[counter].Add(measurment,
-                            (tariff.TariffWithoutCouner * measurment.countOfResident * tariff.TariffPrice));
+                            (tariff.TariffWithoutCouner * measurment.CountOfResident * tariff.TariffPrice));
                     }
                 }
 
@@ -186,28 +186,32 @@ namespace ERCTest.Library
             return allMeasurmentsDic;
         }
 
-        private void GetGVSTECounterMesurments(Dictionary<ICounter, Dictionary<Measurment, double>> allMeasurmentsDic)
+        private void GetGVSTECounterMesurments(Dictionary<ICounter, Dictionary<Measurment, decimal>> allMeasurmentsDic)
         {
-            var lastSum = 0d;
-            allMeasurmentsDic[CurrentHome.GVSTECounter] = new Dictionary<Measurment, double>();
+            var lastSum = 0m;
+            allMeasurmentsDic[CurrentHome.GVSTECounter] = new Dictionary<Measurment, decimal>();
             var tariff = CurrentHome.GVSTECounter.GetTariff();
             var GVSTariff = CurrentHome.GVSDevice.GetTariff();
 
 
             foreach (var measurment in CurrentHome.GVSDevice.Measurments)
             {
-                if (measurment.AmountOfConsumption != -1)
+                var GVSTEMesurment = (Measurment)measurment.Clone();
+
+
+                if (GVSTEMesurment.AmountOfConsumption != -1)
                 {
-                    var mounthSum = (tariff.TariffPrice * measurment.AmountOfConsumption * tariff.TariffWithoutCouner) - lastSum;
-                    allMeasurmentsDic[CurrentHome.GVSTECounter].Add(measurment, mounthSum);
+                    var mounthSum = (tariff.TariffPrice * GVSTEMesurment.AmountOfConsumption * tariff.TariffWithoutCouner) - lastSum;
+                    GVSTEMesurment.AmountOfConsumption = GVSTEMesurment.AmountOfConsumption * tariff.TariffWithoutCouner;
+                    allMeasurmentsDic[CurrentHome.GVSTECounter].Add(GVSTEMesurment, mounthSum);
                     lastSum += mounthSum;
                 }
                 else
                 {
                     lastSum = 0;
 
-                    allMeasurmentsDic[CurrentHome.GVSTECounter].Add(measurment,
-                        (tariff.TariffWithoutCouner * (measurment.countOfResident * GVSTariff.TariffWithoutCouner )* tariff.TariffPrice));
+                    allMeasurmentsDic[CurrentHome.GVSTECounter].Add(GVSTEMesurment,
+                        (tariff.TariffWithoutCouner * (GVSTEMesurment.CountOfResident * GVSTariff.TariffWithoutCouner )* tariff.TariffPrice));
                 }
             }
         }

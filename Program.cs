@@ -16,7 +16,7 @@ namespace ERCTest
         {
             Home = new Home();
             HomeController = new HomeController(Home);
-            StartTariff();
+            //StartTariff(); если тарифы не появляются в БД, то раскомментировать
             CreateHome();
         }
 
@@ -87,11 +87,11 @@ namespace ERCTest
             using (var db = new ERContext())
             {
                 var tariffsList = new List<Tariff>() {
-                    new Tariff() { ServiceName = "ХВС", TariffPrice = 35.78, TariffWithoutCouner = 4.85, UnitOfMeasurment = "м3"  },
-                    new Tariff() { ServiceName = "ГВС", TariffPrice = 158.98, TariffWithoutCouner = 4.01, UnitOfMeasurment = "м3" },
-                    new Tariff() { ServiceName = "ГВСТЭ", TariffPrice = 998.69, TariffWithoutCouner = 0.05349, UnitOfMeasurment = "Гкал" },
-                    new Tariff() { ServiceName = "ЭЭНочь", TariffPrice = 2.31, TariffWithoutCouner = 82, UnitOfMeasurment =  "квт*ч"},
-                    new Tariff() { ServiceName = "ЭЭДень", TariffPrice = 4.9, TariffWithoutCouner = 82, UnitOfMeasurment =  "квт*ч"} };
+                    new Tariff() { ServiceName = "ХВС", TariffPrice = 35.78m, TariffWithoutCouner = 4.85m, UnitOfMeasurment = "м3"  },
+                    new Tariff() { ServiceName = "ГВС", TariffPrice = 158.98m, TariffWithoutCouner = 4.01m, UnitOfMeasurment = "м3" },
+                    new Tariff() { ServiceName = "ГВСТЭ", TariffPrice = 998.69m, TariffWithoutCouner = 0.05349m, UnitOfMeasurment = "Гкал" },
+                    new Tariff() { ServiceName = "ЭЭНочь", TariffPrice = 2.31m, TariffWithoutCouner = 82, UnitOfMeasurment =  "квт*ч"},
+                    new Tariff() { ServiceName = "ЭЭДень", TariffPrice = 4.9m, TariffWithoutCouner = 82, UnitOfMeasurment =  "квт*ч"} };
            
                 db.Tariffs.AddRange(tariffsList);
                 db.SaveChanges();
@@ -156,14 +156,14 @@ namespace ERCTest
                     var time = DateTime.Now;
 
                     HomeController.SetMesurments(counterInHome,
-                    new Measurment() { AmountOfConsumption = double.Parse(currentAmount), CheckTime = time,
-                        countOfResident = HomeController.CurrentHome.ResidientsCount});
+                    new Measurment() { AmountOfConsumption = decimal.Parse(currentAmount), CheckTime = time,
+                        CountOfResident = HomeController.CurrentHome.ResidientsCount});
                 }
                 else
                 {
                     HomeController.SetMesurments(counterInHome,
                         new Measurment() { AmountOfConsumption = -1, CheckTime = DateTime.Now,
-                            countOfResident = HomeController.CurrentHome.ResidientsCount });
+                            CountOfResident = HomeController.CurrentHome.ResidientsCount });
 
                     Console.WriteLine("Спасибо, мы подали ваши показания в расчете на "
                         + HomeController.CurrentHome.ResidientsCount + " количество человек.");
@@ -238,18 +238,18 @@ namespace ERCTest
 
             Console.WriteLine("Ваши начисления:");
             var allMeasurmentsDic = HomeController.GetAllMeasurmentsDic();
-            var totalSum = 0d;
+            var totalSum = 0m;
 
             foreach (var counter in allMeasurmentsDic.Keys)
             {
                 Console.WriteLine(counter.Name + "\n");
-                var totalCounterSum = 0d;
+                var totalCounterSum = 0m;
 
                 foreach (var measurmentAndSum in allMeasurmentsDic[counter])
                 {
                     Console.WriteLine("     Дата подачи показаний:" + measurmentAndSum.Key.CheckTime);
                     if (measurmentAndSum.Key.AmountOfConsumption == -1)
-                        Console.WriteLine("     Сумма составлена с расчетом на " + measurmentAndSum.Key.countOfResident + " человек.");
+                        Console.WriteLine("     Сумма составлена с расчетом на " + measurmentAndSum.Key.CountOfResident + " человек.");
                     else 
                         Console.WriteLine("     Количество потребления:" + measurmentAndSum.Key.AmountOfConsumption);
                     totalCounterSum += measurmentAndSum.Value;
