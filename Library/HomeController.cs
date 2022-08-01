@@ -47,6 +47,7 @@ namespace ERCTest.Library
                     .Include(x => x.GVSDevice.Measurments)
                     .Include(x => x.EEDeviceDay.Measurments)
                     .Include(x => x.EEDeviceNight.Measurments)
+                    .Include(x => x.GVSTECounter.Measurments)
                     .FirstOrDefault(x => x.OwnerName == CurrentHome.OwnerName);
                 if (home != null)
                 {
@@ -99,6 +100,9 @@ namespace ERCTest.Library
                         break;
                     case EECounterNight _:
                         CurrentHome.EEDeviceNight = (EECounterNight)counter;
+                        break;
+                    case GVSTECounter _:
+                        CurrentHome.GVSTECounter = (GVSTECounter)counter;
                         break;
                 }
             }
@@ -177,7 +181,35 @@ namespace ERCTest.Library
                 lastSum = 0;
             }
 
+            GetGVSTECounterMesurments(allMeasurmentsDic);
+
             return allMeasurmentsDic;
+        }
+
+        private void GetGVSTECounterMesurments(Dictionary<ICounter, Dictionary<Measurment, double>> allMeasurmentsDic)
+        {
+            var lastSum = 0d;
+            allMeasurmentsDic[CurrentHome.GVSTECounter] = new Dictionary<Measurment, double>();
+            var tariff = CurrentHome.GVSTECounter.GetTariff();
+            var GVSTariff = CurrentHome.GVSDevice.GetTariff();
+
+
+            foreach (var measurment in CurrentHome.GVSDevice.Measurments)
+            {
+                if (measurment.AmountOfConsumption != -1)
+                {
+                    var mounthSum = (tariff.TariffPrice * measurment.AmountOfConsumption * tariff.TariffWithoutCouner) - lastSum;
+                    allMeasurmentsDic[CurrentHome.GVSTECounter].Add(measurment, mounthSum);
+                    lastSum += mounthSum;
+                }
+                else
+                {
+                    lastSum = 0;
+
+                    allMeasurmentsDic[CurrentHome.GVSTECounter].Add(measurment,
+                        (tariff.TariffWithoutCouner * (measurment.countOfResident * GVSTariff.TariffWithoutCouner )* tariff.TariffPrice));
+                }
+            }
         }
 
         public void SaveChangesInDB()

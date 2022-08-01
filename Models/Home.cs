@@ -12,7 +12,7 @@ namespace ERCTest
         //    EEDevice = new EECounter();
         //    GVSDevice = new GVSCounter();
         //    HVSDevice = new HVSCounter(); 
-        //} не работает нормально с БД (из-за того, что при вызове создает
+        //} не работает нормально с БД (из-за того, что при инициализации создает
         //  новый объект класса и обнуляет все свойства,где прописаны счетчики )
 
         public int Id { get; set; }
@@ -26,6 +26,9 @@ namespace ERCTest
         public EECounterNight EEDeviceNight { get; set; }
         public GVSCounter GVSDevice { get; set; }
         public HVSCounter HVSDevice { get; set; }
+
+
+        public GVSTECounter GVSTECounter { get; set; }
 
         public int ResidientsCount { get; set; }
 

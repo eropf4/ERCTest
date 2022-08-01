@@ -52,7 +52,7 @@ namespace ERCTest
         private static void CheckCounters()
         {
             var counters = new Dictionary<string, List<ICounter>> {
-                { "ХВС", new List<ICounter> {new HVSCounter() } },
+                { "ХВС", new List<ICounter> {{new HVSCounter() }, new GVSTECounter() } },
                 { "ГВС", new List<ICounter> {new GVSCounter() } },
                 { "ЭЭ", new List<ICounter> {{new EECounterDay() }, {new EECounterNight()}}}};
 
@@ -89,10 +89,10 @@ namespace ERCTest
                 var tariffsList = new List<Tariff>() {
                     new Tariff() { ServiceName = "ХВС", TariffPrice = 35.78, TariffWithoutCouner = 4.85, UnitOfMeasurment = "м3"  },
                     new Tariff() { ServiceName = "ГВС", TariffPrice = 158.98, TariffWithoutCouner = 4.01, UnitOfMeasurment = "м3" },
+                    new Tariff() { ServiceName = "ГВСТЭ", TariffPrice = 998.69, TariffWithoutCouner = 0.05349, UnitOfMeasurment = "Гкал" },
                     new Tariff() { ServiceName = "ЭЭНочь", TariffPrice = 2.31, TariffWithoutCouner = 82, UnitOfMeasurment =  "квт*ч"},
                     new Tariff() { ServiceName = "ЭЭДень", TariffPrice = 4.9, TariffWithoutCouner = 82, UnitOfMeasurment =  "квт*ч"} };
            
-
                 db.Tariffs.AddRange(tariffsList);
                 db.SaveChanges();
             }
@@ -253,13 +253,13 @@ namespace ERCTest
                     else 
                         Console.WriteLine("     Количество потребления:" + measurmentAndSum.Key.AmountOfConsumption);
                     totalCounterSum += measurmentAndSum.Value;
-                    Console.WriteLine("     Cумма за месяц:" + measurmentAndSum.Value + "\n");
+                    Console.WriteLine("     Cумма за месяц:" + measurmentAndSum.Value + "\n\n");
                 }
-                Console.WriteLine("         Итоговая сумма за все месяцы:" + totalCounterSum);
+                Console.WriteLine("         Итоговая сумма за все месяцы:" + totalCounterSum + "\n");
                 totalSum += totalCounterSum;
             }
 
-            Console.WriteLine("                 Итоговая сумма за все месяцы:" + totalSum);
+            Console.WriteLine("                 Итоговая сумма за все месяцы по всем счетчикам:" + totalSum);
 
             Console.ReadLine();
             Console.Clear();
