@@ -202,7 +202,7 @@ namespace ERCTest.Library
                 if (GVSTEMesurment.AmountOfConsumption != -1)
                 {
                     var mounthSum = (tariff.TariffPrice * GVSTEMesurment.AmountOfConsumption * tariff.TariffWithoutCouner) - lastSum;
-                    GVSTEMesurment.AmountOfConsumption = GVSTEMesurment.AmountOfConsumption * tariff.TariffWithoutCouner;
+                    GVSTEMesurment.AmountOfConsumption *= tariff.TariffWithoutCouner;
                     allMeasurmentsDic[CurrentHome.GVSTECounter].Add(GVSTEMesurment, mounthSum);
                     lastSum += mounthSum;
                 }
@@ -216,7 +216,7 @@ namespace ERCTest.Library
             }
         }
 
-        public void SaveChangesInDB()
+        public void SaveNewHomeInDB()
         {
             using (var bd = new ERContext())
             {
